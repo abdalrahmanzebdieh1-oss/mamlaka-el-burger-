@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مملكة البرجر - المنيو الإلكتروني</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.18.5/package/dist/xlsx.full.min.js"></script>
+<style>
+  body { font-family: 'Cairo', sans-serif; background-color: #18181b; color: #f4f4f5; }
+  .hidden { display: none !important; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+<script>
+  window.handleBannerError = function(img) { img.classList.add('hidden'); };
+  window.handleImgError = function(img) {
+    img.onerror = null;
+    img.src = 'https://placehold.co/300x300/27272a/facc15?text=Burger+Kingdom';
+  };
+</script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 antialiased selection:bg-yellow-400 selection:text-zinc-950">
+<div id="app" class="max-w-[480px] mx-auto min-h-screen bg-[#27272a] shadow-2xl flex flex-col relative border-x border-zinc-700/60">
+  <!-- Header -->
+  <header class="relative bg-[#18181b] border-b border-zinc-700/80 overflow-hidden flex-shrink-0">
+    <img id="bannerImg" src="" onerror="window.handleBannerError(this)" class="w-full h-32 object-cover opacity-45 hidden" alt="غلاف المطعم">
+    <div class="p-4 flex items-center justify-between gap-3 relative z-10">
+      <div class="flex items-center gap-3">
+        <div id="logoBox" class="w-14 h-14 rounded-2xl bg-yellow-400 text-zinc-950 flex items-center justify-center shadow-lg border-2 border-zinc-900 flex-shrink-0 overflow-hidden">
+          <i data-lucide="sandwich" class="w-8 h-8 stroke-[2.5]"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 id="restName" class="text-xl font-black text-white tracking-tight">مملكة البرجر</h1>
+            <span id="statusBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">مفتوح</span>
+          </div>
+          <p id="restDesc" class="text-xs text-zinc-400 mt-0.5 line-clamp-1">برجر محشي شيدر • مشويات • مقبلات</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a id="callBtn" href="tel:01000000000" class="p-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-yellow-400 border border-zinc-700 transition" title="اتصال"><i data-lucide="phone" class="w-4 h-4"></i></a>
+        <button onclick="window.shareMenu()" class="p-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition" title="مشاركة"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+        <button onclick="window.openAdmin()" class="p-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition" title="الإدارة"><i data-lucide="settings" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+    <!-- Search & Categories -->
+    <div class="px-4 pb-3 space-y-2.5">
+      <div class="relative">
+        <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute right-3.5 top-3"></i>
+        <input id="searchInput" oninput="window.renderMenu()" type="text" placeholder="ابحث عن برجر، فرايز، إضافات..." class="w-full bg-zinc-900/90 border border-zinc-700 rounded-xl pr-10 pl-3 py-2 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-400">
+      </div>
+      <div id="catTabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+    </div>
+  </header>
+
+  <!-- Main Menu List -->
+  <main id="menuContainer" class="flex-1 p-4 space-y-6 pb-28"></main>
+
+  <!-- Footer -->
+  <footer class="bg-[#18181b] border-t border-zinc-800 p-5 text-center space-y-3 mt-auto">
+    <h3 id="footerName" class="font-bold text-base text-yellow-400">مملكة البرجر</h3>
+    <p id="footerAddress" class="text-xs text-zinc-400"></p>
+    <div id="socialLinks" class="flex justify-center gap-3"></div>
+    <div class="pt-3 border-t border-zinc-800/80">
+      <a href="https://wa.me/201070090134?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D9%85%D9%86%D8%B8%D9%88%D9%85%D8%A9%20%D8%AA%D9%83%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%AA%D8%B5%D9%85%D9%8A%D9%85%20%D9%85%D9%86%D9%8A%D9%88%20%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A%20%D9%85%D9%85%D8%A7%D8%AB%D9%84" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-yellow-400 transition">
+        <span>تم التطوير بواسطة</span>
+        <span class="font-bold text-zinc-200">مَنظومة تك ⚡</span>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Floating Cart Bar -->
+  <div id="cartBar" class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[448px] z-30 hidden">
+    <button onclick="window.openCart()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-black py-3.5 px-4 rounded-2xl shadow-xl flex items-center justify-between transition transform active:scale-[0.99]">
+      <div class="flex items-center gap-2.5">
+        <span id="cartCount" class="bg-zinc-950 text-yellow-400 text-xs font-black w-6 h-6 rounded-lg flex items-center justify-center">0</span>
+        <span class="text-sm">عرض السلة وإتمام الطلب</span>
+      </div>
+      <span id="cartTotal" class="text-sm font-black">0 ج.م</span>
+    </button>
+  </div>
+</div>
+
+<!-- Dynamic Modal Container -->
+<div id="modalContainer"></div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-zinc-900 text-white border border-yellow-400/50 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold z-50 hidden"></div>
+
+<script>
+const DEFAULT_VIEW_ONLY = false;
+const STORAGE_KEY = 'burger_kingdom_menu_v84';
+const ADMIN_PASS_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'; // admin123
+const LICENSE_SECRET = 'MT-PRO-2026';
+
+const INITIAL_DATA = {
+  settings: {
+    name: 'مملكة البرجر',
+    desc: 'برجر لحم بقري محشي شيدر • تشيكن • مقبلات',
+    phone: '01000000000',
+    whatsapp: '201000000000',
+    address: 'الفرع الرئيسي - وسط المدينة',
+    openTime: '12:00',
+    closeTime: '03:00',
+    bannerUrl: '',
+    logoUrl: '',
+    facebook: '',
+    instagram: '',
+    mapUrl: '',
+    instapay: 'burgerkingdom@instapay',
+    couponsEnabled: true
+  },
+  categories: ['BURGER MENU', 'CHICKEN MENU', 'APPTIZR', 'EXTRA'],
+  items: [
+    { id: 1, cat: 'BURGER MENU', name: 'FACTORY BURGER', desc: 'قطعة برجر + خس + طماطم + بصل + باربكيو + تيستي + كاتشب + بطاطس', prices: [{ label: 'عادي', price: 100 }], img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80', badge: '' },
+    { id: 2, cat: 'BURGER MENU', name: 'TROJAN BURGER', desc: 'قطعة برجر + خس + طماطم + بصل + روزبيف + صوابع موتزاريلا + باربكيو + تيستي + شيدر + كاتشب + بطاطس', prices: [{ label: 'عادي', price: 140 }], img: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&q=80', badge: '' },
+    { id: 3, cat: 'BURGER MENU', name: 'GRANGER BURGER', desc: 'قطعة برجر + خس + طماطم + بصل + مشروم + حلقات بصل + موتزاريلا + باربكيو + تيستي + شيدر + كاتشب + بطاطس', prices: [{ label: 'عادي', price: 150 }], img: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&q=80', badge: 'NEW' },
+    { id: 4, cat: 'BURGER MENU', name: 'BEEF MUSHROOM', desc: 'قطعة برجر + خس + طماطم + بصل + صوص وايت مشروم + سويت كورن + بطاطس', prices: [{ label: 'عادي', price: 150 }], img: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=400&q=80', badge: 'NEW' },
+    { id: 5, cat: 'BURGER MENU', name: 'FLIAR BURGER', desc: 'قطعة برجر + خس + طماطم + امريكن تشيز + هالبينو + بصل مكرمل + باربكيو + تيستي + بطاطس', prices: [{ label: 'عادي', price: 150 }], img: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&q=80', badge: 'NEW' },
+    { id: 6, cat: 'BURGER MENU', name: 'KING DOM BURGER', desc: '2 قطعة برجر + خس + بصل + طماطم + صوابع موتزاريلا + باربكيو + تيستي + شيدر + كاتشب + بطاطس', prices: [{ label: 'دبل', price: 175 }], img: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&q=80', badge: 'الأكثر طلباً' },
+    { id: 7, cat: 'BURGER MENU', name: 'TRIPLE BURGER', desc: '3 قطعة برجر + خس + طماطم + بصل + روز بيف + صوابع موتزاريلا + باربكيو + تيستي + شيدر + كاتشب + بطاطس', prices: [{ label: 'تريبل', price: 220 }], img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400&q=80', badge: '' },
+    { id: 8, cat: 'CHICKEN MENU', name: 'CHICKEN RANCH', desc: 'قطعة صدور دجاج + خس + طماطم + بصل + رانش + باربكيو + كاتشب + بطاطس', prices: [{ label: 'عادي', price: 100 }], img: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400&q=80', badge: '' },
+    { id: 9, cat: 'CHICKEN MENU', name: 'CASSIA CHICKEN', desc: 'قطعة صدور دجاج + خس + طماطم + بصل + تركي + صوابع موتزاريلا + رانش + باربكيو + شيدر + كاتشب + بطاطس', prices: [{ label: 'عادي', price: 140 }], img: 'https://images.unsplash.com/photo-1615557960916-5f4791effe9d?w=400&q=80', badge: '' },
+    { id: 10, cat: 'CHICKEN MENU', name: 'KAJA CHICKEN', desc: 'قطعة صدور دجاج + خس + طماطم + بصل + مشروم + حلقات بصل + موتزاريلا + رانش + باربكيو + شيدر + كاتشب + بطاطس', prices: [{ label: 'عادي', price: 150 }], img: 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400&q=80', badge: 'NEW' },
+    { id: 11, cat: 'CHICKEN MENU', name: 'GRILLED CHICKEN', desc: 'قطعة صدور دجاج + خس + طماطم + بصل + صوص وايت مشروم + سويت كورن + بطاطس', prices: [{ label: 'عادي', price: 150 }], img: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&q=80', badge: 'NEW' },
+    { id: 12, cat: 'CHICKEN MENU', name: 'CHICKEN BURGER', desc: 'قطعة برجر + خس + طماطم + امريكن تشيز + هالبينو + بصل مكرمل + رانش + باربكيو + بطاطس', prices: [{ label: 'عادي', price: 150 }], img: 'https://images.unsplash.com/photo-1513185158878-8d8c2a2a3da3?w=400&q=80', badge: 'NEW' },
+    { id: 13, cat: 'CHICKEN MENU', name: 'KING DOM CHICKEN', desc: '2 قطعة دجاج + خس + طماطم + بصل + صوابع موتزاريلا + رانش + باربكيو + شيدر + كاتشب + بطاطس', prices: [{ label: 'دبل', price: 175 }], img: 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400&q=80', badge: '' },
+    { id: 14, cat: 'CHICKEN MENU', name: 'TRIPLE CHICKEN', desc: '3 قطعة صدور دجاج + خس + طماطم + بصل + صوابع موتزاريلا + تركي + رانش + باربكيو + شيدر + كاتشب + بطاطس', prices: [{ label: 'تريبل', price: 220 }], img: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400&q=80', badge: 'NEW' },
+    { id: 15, cat: 'APPTIZR', name: 'FRIES', desc: 'بطاطس مقلية مقرمشة ذهبية', prices: [{ label: 'وسط', price: 40 }, { label: 'كبير', price: 60 }], img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80', badge: '' },
+    { id: 16, cat: 'APPTIZR', name: 'BACON FRIES', desc: 'بطاطس مقلية مغطاة بصوص الجبنة وقطع البيكون', prices: [{ label: 'عادي', price: 70 }], img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400&q=80', badge: '' },
+    { id: 17, cat: 'APPTIZR', name: 'CHEESE FRIES', desc: 'بطاطس مقلية غرقانة بصوص الجبنة الشيدر', prices: [{ label: 'عادي', price: 70 }], img: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80', badge: '' },
+    { id: 18, cat: 'APPTIZR', name: 'KDF FRISE', desc: 'بطاطس كينج دوم الخاصة بالخلطة والصوصات', prices: [{ label: 'عادي', price: 90 }], img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400&q=80', badge: '' },
+    { id: 19, cat: 'APPTIZR', name: 'SMOKED', desc: 'بطاطس مقلية مع التركي المدخن وصوص الجبنة', prices: [{ label: 'عادي', price: 85 }], img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80', badge: 'NEW' },
+    { id: 20, cat: 'APPTIZR', name: 'MEAT FRIES', desc: 'بطاطس مقلية مع قطع اللحم البقري وصوص الشيدر', prices: [{ label: 'عادي', price: 90 }], img: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80', badge: 'NEW' },
+    { id: 21, cat: 'APPTIZR', name: 'HOT FRIES', desc: 'بطاطس مقلية حارة بالهالبينو والصوص الحار', prices: [{ label: 'عادي', price: 60 }], img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80', badge: 'NEW' },
+    { id: 22, cat: 'APPTIZR', name: 'MAX PRO', desc: 'بطاطس محملة باللحم والجبنة والصوصات الخاصة', prices: [{ label: 'عادي', price: 110 }], img: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80', badge: 'NEW' },
+    { id: 23, cat: 'EXTRA', name: 'BBQ SAUCE', desc: 'صوص باربكيو مدخن', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400&q=80', badge: '' },
+    { id: 24, cat: 'EXTRA', name: 'RANCH SAUCE', desc: 'صوص رانش كريمي', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400&q=80', badge: '' },
+    { id: 25, cat: 'EXTRA', name: 'TASTY SAUCE', desc: 'صوص تيستي الخاص', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400&q=80', badge: '' },
+    { id: 26, cat: 'EXTRA', name: 'CHEDDAR SAUCE', desc: 'صوص جبنة شيدر ساخن', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80', badge: '' },
+    { id: 27, cat: 'EXTRA', name: 'KETCHUP SAUCE', desc: 'صوص كاتشب', prices: [{ label: 'إضافة', price: 10 }], img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400&q=80', badge: '' },
+    { id: 28, cat: 'EXTRA', name: 'ROSE BEEF', desc: 'شرائح روز بيف', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80', badge: '' },
+    { id: 29, cat: 'EXTRA', name: 'AMERICAN CHEESE', desc: 'شريحة جبنة أمريكي', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&q=80', badge: '' },
+    { id: 30, cat: 'EXTRA', name: 'CARAMELIZED', desc: 'بصل مكرمل', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80', badge: '' },
+    { id: 31, cat: 'EXTRA', name: 'MOZZARELLA STICKS', desc: 'أصابع موتزاريلا مقرمشة', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=400&q=80', badge: '' },
+    { id: 32, cat: 'EXTRA', name: 'ONION RINGS', desc: 'حلقات بصل مقرمشة', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80', badge: '' },
+    { id: 33, cat: 'EXTRA', name: 'MUSHROOM', desc: 'مشروم طازج', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=400&q=80', badge: '' },
+    { id: 34, cat: 'EXTRA', name: 'JALAPENO', desc: 'فلفل هالبينو حار', prices: [{ label: 'إضافة', price: 10 }], img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80', badge: '' },
+    { id: 35, cat: 'EXTRA', name: 'TURKISH SMOKER', desc: 'شرائح تركي مدخن', prices: [{ label: 'إضافة', price: 20 }], img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80', badge: '' },
+    { id: 36, cat: 'EXTRA', name: 'MUSHROOM SAUCE', desc: 'صوص وايت مشروم', prices: [{ label: 'إضافة', price: 25 }], img: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=400&q=80', badge: '' }
+  ],
+  addons: [
+    { id: 1, name: 'BBQ SAUCE', price: 20 },
+    { id: 2, name: 'RANCH SAUCE', price: 20 },
+    { id: 3, name: 'TASTY SAUCE', price: 20 },
+    { id: 4, name: 'CHEDDAR SAUCE', price: 20 },
+    { id: 5, name: 'KETCHUP SAUCE', price: 10 },
+    { id: 6, name: 'ROSE BEEF', price: 20 },
+    { id: 7, name: 'AMERICAN CHEESE', price: 20 },
+    { id: 8, name: 'CARAMELIZED', price: 20 },
+    { id: 9, name: 'MOZZARELLA STICKS', price: 20 },
+    { id: 10, name: 'ONION RINGS', price: 20 },
+    { id: 11, name: 'MUSHROOM', price: 20 },
+    { id: 12, name: 'JALAPENO', price: 10 },
+    { id: 13, name: 'TURKISH SMOKER', price: 20 },
+    { id: 14, name: 'MUSHROOM SAUCE', price: 25 }
+  ],
+  zones: [
+    { id: 1, name: 'داخل المدينة (وسط البلد)', fee: 20 },
+    { id: 2, name: 'الأحياء المجاورة', fee: 30 },
+    { id: 3, name: 'المناطق البعيدة', fee: 45 }
+  ],
+  coupons: [
+    { code: 'KING10', type: 'percent', value: 10 }
+  ]
+};
+
+let state = loadState();
+let viewOnlyMode = localStorage.getItem('mt_license_override') ? localStorage.getItem('mt_license_override') === 'true' : DEFAULT_VIEW_ONLY;
+let selectedCat = 'الكل';
+let cart = [];
+let orderType = 'delivery'; // 'dinein' | 'takeaway' | 'delivery'
+let selectedZoneId = state.zones[0]?.id || 1;
+let appliedCoupon = null;
+let gpsCoords = null;
+let adminUnlocked = false;
+let adminTab = 'items';
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(INITIAL_DATA));
+  } catch (e) { return JSON.parse(JSON.stringify(INITIAL_DATA)); }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function sanitize(str) {
+  const div = document.createElement('div');
+  div.textContent = str ?? '';
+  return div.innerHTML;
+}
+
+function normalizeArabicInput(str) {
+  const map = { 'ض':'q','ص':'w','ث':'e','ق':'r','ف':'t','غ':'y','ع':'u','ه':'i','خ':'o','ح':'p','ش':'a','س':'s','ي':'d','ب':'f','ل':'g','ا':'h','ت':'j','ن':'k','م':'l','ئ':'z','ء':'x','ؤ':'c','ر':'v','لا':'b','ى':'n','ة':'m','٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9' };
+  return str.split('').map(c => map[c] || c).join('');
+}
+
+function formatDirectImageUrl(url) {
+  if (!url) return '';
+  const m = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]{25,})/);
+  return m ? `https://lh3.googleusercontent.com/d/${m[1]}` : url;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2800);
+}
+
+function isStoreOpen() {
+  try {
+    const now = new Date();
+    const cur = now.getHours() * 60 + now.getMinutes();
+    const [oh, om] = state.settings.openTime.split(':').map(Number);
+    const [ch, cm] = state.settings.closeTime.split(':').map(Number);
+    const openM = oh * 60 + om, closeM = ch * 60 + cm;
+    if (closeM < openM) return cur >= openM || cur <= closeM;
+    return cur >= openM && cur <= closeM;
+  } catch { return true; }
+}
+
+function renderApp() {
+  const s = state.settings;
+  document.getElementById('restName').textContent = s.name;
+  document.getElementById('footerName').textContent = s.name;
+  document.getElementById('restDesc').textContent = s.desc;
+  document.getElementById('footerAddress').textContent = `${s.address} • مواعيد العمل: ${s.openTime} - ${s.closeTime}`;
+  document.getElementById('callBtn').href = `tel:${s.phone}`;
+
+  const banner = document.getElementById('bannerImg');
+  if (s.bannerUrl) { banner.src = formatDirectImageUrl(s.bannerUrl); banner.classList.remove('hidden'); }
+  else { banner.classList.add('hidden'); }
+
+  const logoBox = document.getElementById('logoBox');
+  if (s.logoUrl) {
+    logoBox.innerHTML = `<img src="${sanitize(formatDirectImageUrl(s.logoUrl))}" onerror="window.handleImgError(this)" class="w-full h-full object-cover">`;
+  } else {
+    logoBox.innerHTML = `<i data-lucide="sandwich" class="w-8 h-8 stroke-[2.5]"></i>`;
+  }
+
+  const open = isStoreOpen();
+  const badge = document.getElementById('statusBadge');
+  badge.textContent = open ? 'مفتوح الآن' : 'مغلق حالياً';
+  badge.className = `text-[11px] font-bold px-2 py-0.5 rounded-full border ${open ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`;
+
+  // Social links
+  const soc = document.getElementById('socialLinks');
+  let socHtml = '';
+  if (s.facebook) socHtml += `<a href="${sanitize(s.facebook)}" target="_blank" class="p-2 rounded-lg bg-zinc-800 text-zinc-300 hover:text-yellow-400"><i data-lucide="facebook" class="w-4 h-4"></i></a>`;
+  if (s.instagram) socHtml += `<a href="${sanitize(s.instagram)}" target="_blank" class="p-2 rounded-lg bg-zinc-800 text-zinc-300 hover:text-yellow-400"><i data-lucide="instagram" class="w-4 h-4"></i></a>`;
+  if (s.mapUrl) socHtml += `<a href="${sanitize(s.mapUrl)}" target="_blank" class="p-2 rounded-lg bg-zinc-800 text-zinc-300 hover:text-yellow-400"><i data-lucide="map-pin" class="w-4 h-4"></i></a>`;
+  soc.innerHTML = socHtml;
+
+  // Categories
+  const cats = ['الكل', ...state.categories];
+  document.getElementById('catTabs').innerHTML = cats.map(c => `
+    <button onclick="window.selectCat('${sanitize(c)}')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${selectedCat === c ? 'bg-yellow-400 text-zinc-950 shadow' : 'bg-zinc-800/90 text-zinc-300 hover:bg-zinc-700'}">${sanitize(c)}</button>
+  `).join('');
+
+  window.renderMenu();
+  updateCartBar();
+  lucide.createIcons();
+}
+
+window.selectCat = function(c) { selectedCat = c; renderApp(); };
+
+window.renderMenu = function() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const container = document.getElementById('menuContainer');
+  const catsToShow = selectedCat === 'الكل' ? state.categories : [selectedCat];
+
+  let html = '';
+  catsToShow.forEach(cat => {
+    const items = state.items.filter(it => it.cat === cat && (!q || it.name.toLowerCase().includes(q) || it.desc.toLowerCase().includes(q)));
+    if (!items.length) return;
+    html += `<div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-1.5 h-5 bg-yellow-400 rounded-full"></span>
+        <h2 class="text-base font-black text-white tracking-wide">${sanitize(cat)}</h2>
+      </div>
+      <div class="space-y-3">
+        ${items.map(it => {
+          const minPrice = Math.min(...it.prices.map(p => p.price));
+          const priceTxt = it.prices.length > 1 ? `يبدأ من ${minPrice} ج.م` : `${minPrice} ج.م`;
+          return `
+          <div class="bg-[#18181b] border border-zinc-700/70 rounded-2xl p-3 flex gap-3 hover:border-yellow-400/50 transition shadow-sm">
+            <img src="${sanitize(formatDirectImageUrl(it.img))}" onerror="window.handleImgError(this)" class="w-24 h-24 rounded-xl object-cover bg-zinc-800 flex-shrink-0 border border-zinc-700/50" alt="${sanitize(it.name)}">
+            <div class="flex-1 flex flex-col justify-between min-w-0">
+              <div>
+                <div class="flex items-start justify-between gap-1">
+                  <h3 class="font-extrabold text-sm text-red-400 leading-snug">${sanitize(it.name)}</h3>
+                  ${it.badge ? `<span class="text-[10px] font-black bg-yellow-400/20 text-yellow-300 border border-yellow-400/30 px-1.5 py-0.5 rounded-md flex-shrink-0">${sanitize(it.badge)}</span>` : ''}
+                </div>
+                <p class="text-[11px] text-zinc-400 mt-1 line-clamp-2 leading-relaxed">${sanitize(it.desc)}</p>
+              </div>
+              <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-zinc-800">
+                <span class="text-sm font-black text-white">${priceTxt}</span>
+                ${!viewOnlyMode ? `<button onclick="window.openCustom(${it.id})" class="bg-yellow-400 hover:bg-yellow-300 text-zinc-950 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1 transition active:scale-95">
+                  <i data-lucide="plus" class="w-3.5 h-3.5 stroke-[3]"></i><span>أضف</span>
+                </button>` : `<span class="text-[11px] text-zinc-500 font-semibold">متوفر بالفرع</span>`}
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html || `<div class="text-center py-12 text-zinc-500 text-sm">لا توجد أصناف مطابقة للبحث</div>`;
+  lucide.createIcons();
+};
+
+window.openCustom = function(itemId) {
+  if (viewOnlyMode) return;
+  const item = state.items.find(i => i.id === itemId);
+  if (!item) return;
+  window._curCustom = { item, priceIdx: 0, addons: [], qty: 1, note: '' };
+
+  const modal = document.getElementById('modalContainer');
+  modal.innerHTML = `
+  <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-[#18181b] border border-zinc-700 w-full max-w-[480px] rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-zinc-800 flex items-center justify-between flex-shrink-0">
+        <h3 class="font-black text-base text-white">${sanitize(item.name)}</h3>
+        <button onclick="window.closeModal()" class="p-1.5 rounded-xl bg-zinc-800 text-zinc-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-4 space-y-4 flex-1 min-h-0 overflow-y-auto">
+        <p class="text-xs text-zinc-400">${sanitize(item.desc)}</p>
+        <div>
+          <label class="block text-xs font-bold text-yellow-400 mb-2">اختر الحجم / النوع:</label>
+          <div class="grid grid-cols-2 gap-2">
+            ${item.prices.map((p, idx) => `
+              <button onclick="window.selectSize(${idx})" id="sizeBtn_${idx}" class="p-2.5 rounded-xl border text-xs font-bold flex justify-between items-center ${idx === 0 ? 'border-yellow-400 bg-yellow-400/10 text-yellow-300' : 'border-zinc-700 bg-zinc-800/60 text-zinc-300'}">
+                <span>${sanitize(p.label)}</span><span>${p.price} ج.م</span>
+              </button>`).join('')}
+          </div>
+        </div>
+        ${state.addons.length ? `<div>
+          <label class="block text-xs font-bold text-yellow-400 mb-2">إضافات اختيارية (EXTRA):</label>
+          <div class="space-y-1.5">
+            ${state.addons.map(a => `
+              <label class="flex items-center justify-between p-2.5 rounded-xl bg-zinc-800/60 border border-zinc-700/70 cursor-pointer">
+                <div class="flex items-center gap-2">
+                  <input type="checkbox" onchange="window.toggleAddon(${a.id})" class="accent-yellow-400 w-4 h-4 rounded">
+                  <span class="text-xs font-semibold text-zinc-200">${sanitize(a.name)}</span>
+                </div>
+                <span class="text-xs font-bold text-yellow-400">+${a.price} ج.م</span>
+              </label>`).join('')}
+          </div>
+        </div>` : ''}
+        <div>
+          <label class="block text-xs font-bold text-zinc-300 mb-1.5">ملاحظات خاصة على الصنف:</label>
+          <input id="customNote" type="text" placeholder="مثال: بدون بصل، زيادة صوص..." class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+        </div>
+      </div>
+      <div class="p-4 border-t border-zinc-800 bg-zinc-900/90 flex items-center gap-3 flex-shrink-0">
+        <div class="flex items-center bg-zinc-800 rounded-xl border border-zinc-700">
+          <button onclick="window.changeCustomQty(-1)" class="px-3 py-2 text-zinc-300 font-black">-</button>
+          <span id="customQty" class="px-2 text-sm font-black text-white">1</span>
+          <button onclick="window.changeCustomQty(1)" class="px-3 py-2 text-yellow-400 font-black">+</button>
+        </div>
+        <button onclick="window.confirmAddToCart()" id="confirmAddBtn" class="flex-1 bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-black py-3 rounded-xl text-sm transition">
+          إضافة للسلة (${item.prices[0].price} ج.م)
+        </button>
+      </div>
+    </div>
+  </div>`;
+  lucide.createIcons();
+};
+
+window.selectSize = function(idx) {
+  window._curCustom.priceIdx = idx;
+  window._curCustom.item.prices.forEach((_, i) => {
+    const b = document.getElementById(`sizeBtn_${i}`);
+    if (b) b.className = `p-2.5 rounded-xl border text-xs font-bold flex justify-between items-center ${i === idx ? 'border-yellow-400 bg-yellow-400/10 text-yellow-300' : 'border-zinc-700 bg-zinc-800/60 text-zinc-300'}`;
+  });
+  updateCustomTotal();
+};
+
+window.toggleAddon = function(id) {
+  const arr = window._curCustom.addons;
+  const idx = arr.indexOf(id);
+  if (idx > -1) arr.splice(idx, 1); else arr.push(id);
+  updateCustomTotal();
+};
+
+window.changeCustomQty = function(d) {
+  window._curCustom.qty = Math.max(1, window._curCustom.qty + d);
+  document.getElementById('customQty').textContent = window._curCustom.qty;
+  updateCustomTotal();
+};
+
+function updateCustomTotal() {
+  const c = window._curCustom;
+  const base = c.item.prices[c.priceIdx].price;
+  const addSum = c.addons.reduce((s, id) => s + (state.addons.find(a => a.id === id)?.price || 0), 0);
+  const total = (base + addSum) * c.qty;
+  document.getElementById('confirmAddBtn').textContent = `إضافة للسلة (${total} ج.م)`;
+}
+
+window.confirmAddToCart = function() {
+  const c = window._curCustom;
+  const sizeObj = c.item.prices[c.priceIdx];
+  const addonObjs = c.addons.map(id => state.addons.find(a => a.id === id)).filter(Boolean);
+  const unitPrice = sizeObj.price + addonObjs.reduce((s, a) => s + a.price, 0);
+  cart.push({
+    uid: Date.now() + Math.random(),
+    name: c.item.name,
+    size: sizeObj.label,
+    addons: addonObjs,
+    unitPrice,
+    qty: c.qty,
+    note: document.getElementById('customNote').value.trim()
+  });
+  window.closeModal();
+  updateCartBar();
+  showToast('تمت إضافة الصنف إلى السلة 🍔');
+};
+
+function updateCartBar() {
+  const bar = document.getElementById('cartBar');
+  if (viewOnlyMode || !cart.length) { bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+  const sub = cart.reduce((s, i) => s + i.unitPrice * i.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = `${sub} ج.م`;
+}
+
+window.setOrderType = function(type) {
+  orderType = type;
+  window.openCart();
+};
+
+window.openCart = function() {
+  if (viewOnlyMode || !cart.length) return;
+  const sub = cart.reduce((s, i) => s + i.unitPrice * i.qty, 0);
+  const zone = state.zones.find(z => z.id == selectedZoneId) || state.zones[0];
+  const deliveryFee = orderType === 'delivery' ? (zone?.fee || 0) : 0;
+  let discount = 0;
+  if (state.settings.couponsEnabled && appliedCoupon) {
+    discount = appliedCoupon.type === 'percent' ? Math.round(sub * appliedCoupon.value / 100) : appliedCoupon.value;
+  }
+  const grandTotal = Math.max(0, sub + deliveryFee - discount);
+
+  document.getElementById('modalContainer').innerHTML = `
+  <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-[#18181b] border border-zinc-700 w-full max-w-[480px] rounded-t-3xl sm:rounded-3xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-zinc-800 flex items-center justify-between flex-shrink-0">
+        <h3 class="font-black text-base text-white flex items-center gap-2"><i data-lucide="shopping-bag" class="w-5 h-5 text-yellow-400"></i> سلة الطلبات</h3>
+        <button onclick="window.closeModal()" class="p-1.5 rounded-xl bg-zinc-800 text-zinc-400"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-4 space-y-4 flex-1 min-h-0 overflow-y-auto">
+        <!-- 3-Way Order Type Switcher -->
+        <div class="grid grid-cols-3 gap-1.5 bg-zinc-900 p-1.5 rounded-2xl border border-zinc-800">
+          <button onclick="window.setOrderType('dinein')" class="py-2 px-1 rounded-xl text-xs font-black transition ${orderType === 'dinein' ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}">🍽️ صالة</button>
+          <button onclick="window.setOrderType('takeaway')" class="py-2 px-1 rounded-xl text-xs font-black transition ${orderType === 'takeaway' ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}">🛍️ تيك أواي</button>
+          <button onclick="window.setOrderType('delivery')" class="py-2 px-1 rounded-xl text-xs font-black transition ${orderType === 'delivery' ? 'bg-yellow-400 text-zinc-950' : 'text-zinc-400 hover:text-white'}">🛵 دليفري</button>
+        </div>
+
+        <!-- Cart Items -->
+        <div class="space-y-2">
+          ${cart.map((it, idx) => `
+            <div class="bg-zinc-900/90 border border-zinc-800 p-3 rounded-xl flex justify-between items-center gap-2">
+              <div class="min-w-0">
+                <div class="text-xs font-black text-white">${sanitize(it.name)} <span class="text-yellow-400">(${sanitize(it.size)})</span></div>
+                ${it.addons.length ? `<div class="text-[10px] text-zinc-400">+ ${it.addons.map(a => sanitize(a.name)).join('، ')}</div>` : ''}
+                ${it.note ? `<div class="text-[10px] text-amber-300">ملاحظة: ${sanitize(it.note)}</div>` : ''}
+                <div class="text-xs font-bold text-zinc-300 mt-1">${it.unitPrice * it.qty} ج.م</div>
+              </div>
+              <div class="flex items-center gap-1.5 bg-zinc-800 rounded-lg px-1.5 py-1">
+                <button onclick="window.updateCartQty(${idx}, -1)" class="w-6 h-6 text-zinc-300 font-bold">-</button>
+                <span class="text-xs font-black text-white px-1">${it.qty}</span>
+                <button onclick="window.updateCartQty(${idx}, 1)" class="w-6 h-6 text-yellow-400 font-bold">+</button>
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <!-- Customer Details Form -->
+        <div class="space-y-2.5 bg-zinc-900/60 p-3 rounded-2xl border border-zinc-800">
+          ${orderType === 'dinein' ? `
+            <div>
+              <label class="block text-xs font-bold text-yellow-400 mb-1">رقم الطاولة *</label>
+              <input id="custTable" type="text" placeholder="مثال: طاولة 5" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+            </div>
+            <input id="custName" type="text" placeholder="الاسم (اختياري)" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+          ` : `
+            <input id="custName" type="text" placeholder="الاسم بالكامل *" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+            <input id="custPhone" type="tel" placeholder="رقم الموبايل *" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+          `}
+          ${orderType === 'delivery' ? `
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 mb-1">منطقة التوصيل:</label>
+              <select onchange="selectedZoneId = this.value; window.openCart();" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+                ${state.zones.map(z => `<option value="${z.id}" ${z.id == selectedZoneId ? 'selected' : ''}>${sanitize(z.name)} (+${z.fee} ج.م)</option>`).join('')}
+              </select>
+            </div>
+            <div class="flex gap-2">
+              <input id="custAddress" type="text" placeholder="العنوان بالتفصيل (شارع / عمارة / شقة) *" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+              <button onclick="window.getGPS()" type="button" class="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-yellow-400 border border-zinc-700 text-xs font-bold flex items-center gap-1 flex-shrink-0">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i><span>${gpsCoords ? 'تم التحديد' : 'GPS'}</span>
+              </button>
+            </div>
+          ` : ''}
+          <div>
+            <label class="block text-xs font-bold text-zinc-300 mb-1">طريقة الدفع:</label>
+            <select id="payMethod" onchange="document.getElementById('instapayBox').classList.toggle('hidden', this.value !== 'instapay')" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white">
+              <option value="cash">كاش عند الاستلام</option>
+              <option value="instapay">إنستاباي / محفظة إلكترونية</option>
+            </select>
+            <div id="instapayBox" class="hidden mt-2 p-2.5 rounded-xl bg-yellow-400/10 border border-yellow-400/30 flex items-center justify-between">
+              <span class="text-[11px] text-yellow-200 font-bold">حساب التحويل: ${sanitize(state.settings.instapay)}</span>
+              <button onclick="window.copyText('${sanitize(state.settings.instapay)}')" class="text-[10px] bg-yellow-400 text-zinc-950 font-black px-2 py-1 rounded-lg">نسخ</button>
+            </div>
+          </div>
+        </div>
+
+        ${state.settings.couponsEnabled ? `
+        <div class="flex gap-2">
+          <input id="couponInput" type="text" placeholder="كود الخصم (مثال: KING10)" value="${appliedCoupon ? appliedCoupon.code : ''}" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white uppercase">
+          <button onclick="window.applyCoupon()" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-yellow-400 text-xs font-black border border-zinc-700">تطبيق</button>
+        </div>` : ''}
+
+        <!-- Summary -->
+        <div class="bg-zinc-900 p-3 rounded-2xl border border-zinc-800 space-y-1.5 text-xs">
+          <div class="flex justify-between text-zinc-400"><span>المجموع الفرعي:</span><span>${sub} ج.م</span></div>
+          ${orderType === 'delivery' ? `<div class="flex justify-between text-zinc-400"><span>رسوم التوصيل:</span><span>${deliveryFee} ج.م</span></div>` : ''}
+          ${discount > 0 ? `<div class="flex justify-between text-emerald-400 font-bold"><span>الخصم (${appliedCoupon.code}):</span><span>-${discount} ج.م</span></div>` : ''}
+          <div class="flex justify-between text-sm font-black text-white pt-1.5 border-t border-zinc-800"><span>الإجمالي النهائي:</span><span class="text-yellow-400">${grandTotal} ج.م</span></div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-zinc-800 bg-zinc-900 flex-shrink-0">
+        <button onclick="window.sendWhatsAppOrder(${sub}, ${deliveryFee}, ${discount}, ${grandTotal})" class="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition">
+          <i data-lucide="send" class="w-4 h-4"></i><span>إرسال الطلب عبر واتساب (${grandTotal} ج.م)</span>
+        </button>
+      </div>
+    </div>
+  </div>`;
+  lucide.createIcons();
+};
+
+window.updateCartQty = function(idx, d) {
+  cart[idx].qty += d;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  updateCartBar();
+  if (!cart.length) window.closeModal(); else window.openCart();
+};
+
+window.getGPS = function() {
+  if (!navigator.geolocation) return showToast('المتصفح لا يدعم تحديد الموقع');
+  showToast('جاري تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(
+    pos => { gpsCoords = `${pos.coords.latitude},${pos.coords.longitude}`; showToast('تم التقاط إحداثيات GPS بنجاح 📍'); window.openCart(); },
+    () => showToast('تعذر الوصول للموقع، يرجى كتابة العنوان يدوياً')
+  );
+};
+
+window.applyCoupon = function() {
+  const code = document.getElementById('couponInput').value.trim().toUpperCase();
+  const found = state.coupons.find(c => c.code.toUpperCase() === code);
+  if (!found) { appliedCoupon = null; showToast('كود الخصم غير صحيح'); }
+  else { appliedCoupon = found; showToast(`تم تفعيل خصم ${found.code} 🎉`); }
+  window.openCart();
+};
+
+window.sendWhatsAppOrder = function(sub, deliveryFee, discount, grandTotal) {
+  const name = document.getElementById('custName')?.value.trim() || '';
+  const phone = document.getElementById('custPhone')?.value.trim() || '';
+  const table = document.getElementById('custTable')?.value.trim() || '';
+  const address = document.getElementById('custAddress')?.value.trim() || '';
+  const pay = document.getElementById('payMethod')?.value === 'instapay' ? 'إنستاباي / محفظة' : 'كاش';
+
+  if (orderType === 'dinein' && !table) return showToast('يرجى إدخال رقم الطاولة');
+  if (orderType !== 'dinein' && (!name || !phone)) return showToast('يرجى إدخال الاسم ورقم الموبايل');
+  if (orderType === 'delivery' && !address) return showToast('يرجى إدخال عنوان التوصيل');
+
+  const typeLabel = orderType === 'dinein' ? `داخل المطعم (طاولة: ${table})` : orderType === 'takeaway' ? 'استلام من الفرع (تيك أواي)' : 'توصيل دليفري';
+  const zone = state.zones.find(z => z.id == selectedZoneId);
+
+  let msg = `*طلب جديد - ${state.settings.name}* 🍔\n`;
+  msg += `نوع الطلب: *${typeLabel}*\n`;
+  if (name) msg += `العميل: ${name}\n`;
+  if (phone) msg += `الموبايل: ${phone}\n`;
+  if (orderType === 'delivery') {
+    msg += `المنطقة: ${zone?.name || ''}\nالعنوان: ${address}\n`;
+    if (gpsCoords) msg += `الموقع GPS: https://maps.google.com/?q=${gpsCoords}\n`;
+  }
+  msg += `طريقة الدفع: ${pay}\n-------------------\n`;
+  cart.forEach((it, i) => {
+    msg += `${i + 1}. *${it.name}* (${it.size}) × ${it.qty} = ${it.unitPrice * it.qty} ج.م\n`;
+    if (it.addons.length) msg += `   + إضافات: ${it.addons.map(a => a.name).join('، ')}\n`;
+    if (it.note) msg += `   * ملاحظة: ${it.note}\n`;
+  });
+  msg += `-------------------\nالمجموع: ${sub} ج.م\n`;
+  if (deliveryFee) msg += `التوصيل: ${deliveryFee} ج.م\n`;
+  if (discount) msg += `الخصم: -${discount} ج.م\n`;
+  msg += `*الإجمالي المطلوب: ${grandTotal} ج.م*`;
+
+  const wa = state.settings.whatsapp.replace(/\D/g, '');
+  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+};
+
+window.shareMenu = async function() {
+  const url = window.location.href;
+  window.copyText(url);
+  if (navigator.share) {
+    try { await navigator.share({ title: state.settings.name, text: state.settings.desc, url }); } catch {}
+  }
+};
+
+window.copyText = function(txt) {
+  const ta = document.createElement('textarea');
+  ta.value = txt; document.body.appendChild(ta); ta.select();
+  document.execCommand('copy'); document.body.removeChild(ta);
+  showToast('تم النسخ إلى الحافظة ✅');
+};
+
+window.closeModal = function() { document.getElementById('modalContainer').innerHTML = ''; };
+
+// ================= ADMIN PANEL =================
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+window.openAdmin = function() {
+  if (!adminUnlocked) {
+    document.getElementById('modalContainer').innerHTML = `
+    <div class="fixed inset-0 bg-black/80 z-40 flex items-center justify-center p-4">
+      <div class="bg-[#18181b] border border-zinc-700 w-full max-w-sm rounded-3xl p-5 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-black text-base text-white">دخول لوحة الإدارة 🔐</h3>
+          <button onclick="window.closeModal()" class="text-zinc-400"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <p class="text-xs text-zinc-400">أدخل كلمة مرور الإدارة (الافتراضية: admin123)</p>
+        <input id="adminPassInput" type="password" placeholder="كلمة المرور" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-white">
+        <button onclick="window.verifyAdmin()" class="w-full bg-yellow-400 text-zinc-950 font-black py-2.5 rounded-xl text-sm">دخول</button>
+      </div>
+    </div>`;
+    lucide.createIcons();
+    return;
+  }
+  renderAdminModal();
+};
+
+window.verifyAdmin = async function() {
+  const raw = document.getElementById('adminPassInput').value.trim();
+  const normalized = normalizeArabicInput(raw);
+  const h1 = await sha256(raw), h2 = await sha256(normalized);
+  if (h1 === ADMIN_PASS_HASH || h2 === ADMIN_PASS_HASH) {
+    adminUnlocked = true;
+    renderAdminModal();
+  } else {
+    showToast('كلمة المرور غير صحيحة');
+  }
+};
+
+function renderAdminModal() {
+  const tabs = [
+    { id: 'items', label: 'الأصناف والإعدادات' },
+    { id: 'zones', label: 'التوصيل' },
+    { id: 'addons', label: 'الإضافات' },
+    { id: 'coupons', label: 'الكوبونات' },
+    { id: 'sync', label: 'المزامنة والترخيص' }
+  ];
+
+  let bodyHtml = '';
+  if (adminTab === 'items') {
+    bodyHtml = `
+    <div class="space-y-4">
+      <!-- License Upsell / Status Card -->
+      <div class="p-3.5 rounded-2xl border ${viewOnlyMode ? 'bg-amber-500/10 border-amber-500/40' : 'bg-emerald-500/10 border-emerald-500/30'} flex items-center justify-between gap-2">
+        <div>
+          <div class="text-xs font-black ${viewOnlyMode ? 'text-amber-300' : 'text-emerald-400'}">${viewOnlyMode ? 'باقة العرض الذكي (View-Only)' : 'باقة الطلبات الكاملة (Pro) ⚡'}</div>
+          <div class="text-[11px] text-zinc-400">${viewOnlyMode ? 'السلة والطلبات مغلقة حالياً' : 'سلة الطلبات والواتساب مفعلة بالكامل'}</div>
+        </div>
+        ${viewOnlyMode ? `<a href="https://wa.me/201070090134?text=%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%AA%D8%B1%D9%82%D9%8A%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D9%8A%D9%88%20%D8%A5%D9%84%D9%89%20%D8%A8%D8%A7%D9%82%D8%A9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%D8%A7%D8%AA%20Pro" target="_blank" class="bg-yellow-400 text-zinc-950 text-[11px] font-black px-3 py-2 rounded-xl flex-shrink-0">🔒 ترقية لباقة الطلبات (Pro)</a>` : ''}
+      </div>
+
+      <!-- Store Settings -->
+      <div class="bg-zinc-900 p-3 rounded-2xl border border-zinc-800 space-y-2">
+        <div class="text-xs font-black text-yellow-400">بيانات المطعم والهوية</div>
+        <input id="set_name" value="${sanitize(state.settings.name)}" placeholder="اسم المطعم" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        <input id="set_desc" value="${sanitize(state.settings.desc)}" placeholder="الوصف" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <input id="set_phone" value="${sanitize(state.settings.phone)}" placeholder="هاتف الاتصال" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+          <input id="set_wa" value="${sanitize(state.settings.whatsapp)}" placeholder="واتساب الطلبات (2010...)" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        </div>
+        <input id="set_address" value="${sanitize(state.settings.address)}" placeholder="العنوان" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <input id="set_open" type="time" value="${state.settings.openTime}" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+          <input id="set_close" type="time" value="${state.settings.closeTime}" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        </div>
+        <input id="set_banner" value="${sanitize(state.settings.bannerUrl)}" placeholder="رابط صورة الغلاف (Banner URL)" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        <div class="flex items-center gap-2">
+          <label class="text-[11px] text-zinc-400">أو رفع صورة غلاف:</label>
+          <input type="file" accept="image/*" onchange="window.uploadCompressedImg(this, 'bannerUrl')" class="text-[11px] text-zinc-300">
+        </div>
+        <input id="set_logo" value="${sanitize(state.settings.logoUrl)}" placeholder="رابط الشعار (Logo URL)" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        <div class="grid grid-cols-3 gap-1.5">
+          <input id="set_fb" value="${sanitize(state.settings.facebook)}" placeholder="رابط فيسبوك" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-[11px]">
+          <input id="set_ig" value="${sanitize(state.settings.instagram)}" placeholder="رابط انستجرام" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-[11px]">
+          <input id="set_map" value="${sanitize(state.settings.mapUrl)}" placeholder="رابط الخريطة" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-[11px]">
+        </div>
+        <button onclick="window.saveSettingsForm()" class="w-full bg-yellow-400 text-zinc-950 font-black py-2 rounded-xl text-xs">حفظ الإعدادات</button>
+      </div>
+
+      <!-- Add / Edit Items -->
+      <div class="bg-zinc-900 p-3 rounded-2xl border border-zinc-800 space-y-2">
+        <div class="text-xs font-black text-yellow-400">إضافة صنف جديد</div>
+        <div class="grid grid-cols-2 gap-2">
+          <input id="new_it_name" placeholder="اسم الصنف" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+          <input id="new_it_cat" placeholder="القسم (مثال: BURGER MENU)" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        </div>
+        <input id="new_it_desc" placeholder="مكونات الصنف" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <input id="new_it_price" type="number" placeholder="السعر (ج.م)" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+          <input id="new_it_img" placeholder="رابط صورة الصنف (URL)" class="bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+        </div>
+        <button onclick="window.addNewItem()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-yellow-400 font-black py-2 rounded-xl text-xs border border-zinc-700">+ إضافة الصنف للمنيو</button>
+      </div>
+
+      <div class="space-y-2">
+        <div class="text-xs font-black text-zinc-300">الأصناف الحالية (${state.items.length})</div>
+        ${state.items.map((it, idx) => `
+          <div class="bg-zinc-900/80 border border-zinc-800 p-2.5 rounded-xl space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-white">${sanitize(it.name)} (${it.prices[0]?.price} ج.م)</span>
+              <button onclick="window.deleteItem(${idx})" class="text-red-400 text-xs font-bold">حذف</button>
+            </div>
+            <input onchange="window.updateItemImg(${idx}, this.value)" value="${sanitize(it.img)}" placeholder="رابط صورة الصنف" class="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1 text-[11px] text-zinc-300">
+          </div>`).join('')}
+      </div>
+    </div>`;
+  } else if (adminTab === 'zones') {
+    bodyHtml = `
+    <div class="space-y-3">
+      <div class="flex gap-2">
+        <input id="z_name" placeholder="اسم المنطقة" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs">
+        <input id="z_fee" type="number" placeholder="الرسوم" class="w-24 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs">
+        <button onclick="window.addZone()" class="bg-yellow-400 text-zinc-950 font-black px-3 rounded-xl text-xs">إضافة</button>
+      </div>
+      ${state.zones.map((z, i) => `
+        <div class="flex justify-between items-center bg-zinc-900 p-3 rounded-xl border border-zinc-800 text-xs">
+          <span>${sanitize(z.name)} - <b class="text-yellow-400">${z.fee} ج.م</b></span>
+          <button onclick="state.zones.splice(${i},1); saveState(); renderAdminModal();" class="text-red-400 font-bold">حذف</button>
+        </div>`).join('')}
+    </div>`;
+  } else if (adminTab === 'addons') {
+    bodyHtml = `
+    <div class="space-y-3">
+      <div class="flex gap-2">
+        <input id="a_name" placeholder="اسم الإضافة" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs">
+        <input id="a_price" type="number" placeholder="السعر" class="w-24 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs">
+        <button onclick="window.addAddon()" class="bg-yellow-400 text-zinc-950 font-black px-3 rounded-xl text-xs">إضافة</button>
+      </div>
+      ${state.addons.map((a, i) => `
+        <div class="flex justify-between items-center bg-zinc-900 p-3 rounded-xl border border-zinc-800 text-xs">
+          <span>${sanitize(a.name)} - <b class="text-yellow-400">${a.price} ج.م</b></span>
+          <button onclick="state.addons.splice(${i},1); saveState(); renderAdminModal();" class="text-red-400 font-bold">حذف</button>
+        </div>`).join('')}
+    </div>`;
+  } else if (adminTab === 'coupons') {
+    bodyHtml = `
+    <div class="space-y-3">
+      <label class="flex items-center justify-between bg-zinc-900 p-3 rounded-xl border border-zinc-800 text-xs font-bold">
+        <span>تفعيل نظام الكوبونات في السلة</span>
+        <input type="checkbox" ${state.settings.couponsEnabled ? 'checked' : ''} onchange="state.settings.couponsEnabled = this.checked; saveState();" class="accent-yellow-400 w-4 h-4">
+      </label>
+      <div class="flex gap-2">
+        <input id="c_code" placeholder="الكود (KING10)" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs uppercase">
+        <input id="c_val" type="number" placeholder="نسبة %" class="w-24 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs">
+        <button onclick="window.addCoupon()" class="bg-yellow-400 text-zinc-950 font-black px-3 rounded-xl text-xs">إضافة</button>
+      </div>
+      ${state.coupons.map((c, i) => `
+        <div class="flex justify-between items-center bg-zinc-900 p-3 rounded-xl border border-zinc-800 text-xs">
+          <span>كود: <b class="text-yellow-400">${sanitize(c.code)}</b> (خصم ${c.value}%)</span>
+          <button onclick="state.coupons.splice(${i},1); saveState(); renderAdminModal();" class="text-red-400 font-bold">حذف</button>
+        </div>`).join('')}
+    </div>`;
+  } else if (adminTab === 'sync') {
+    bodyHtml = `
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="window.exportExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs">📥 تصدير Excel</button>
+        <label class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs text-center cursor-pointer border border-zinc-700">
+          📤 استيراد Excel
+          <input type="file" accept=".xlsx,.xls" onchange="window.importExcel(this)" class="hidden">
+        </label>
+      </div>
+
+      <div class="bg-zinc-900 p-3 rounded-2xl border border-zinc-800 space-y-2">
+        <div class="text-xs font-bold text-yellow-400">مزامنة Google Sheets</div>
+        <input id="gsheetUrl" placeholder="الصق رابط Google Sheet هنا..." class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs">
+        <button onclick="window.syncGoogleSheet()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2 rounded-xl text-xs border border-zinc-700">🔄 سحب البيانات من Google Sheets</button>
+      </div>
+
+      <button onclick="window.exportHtml()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-black py-3 rounded-xl text-xs">💾 تصدير نسخة الكود المحدثة (index.html)</button>
+      <button onclick="window.factoryReset()" class="w-full bg-red-500/20 text-red-400 border border-red-500/30 font-bold py-2 rounded-xl text-xs">إعادة ضبط المصنع</button>
+
+      <!-- Vendor License Lock -->
+      <div class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 space-y-2 mt-4">
+        <div class="text-[11px] font-bold text-zinc-400">منطقة الدعم الفني - منظومة تك (تغيير نوع الباقة)</div>
+        <div class="flex gap-2">
+          <input id="licenseKeyInput" type="password" placeholder="كود الترخيص السري" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs">
+          <button onclick="window.unlockLicense()" class="bg-zinc-800 text-yellow-400 font-bold px-3 py-1.5 rounded-lg text-xs">تفعيل</button>
+        </div>
+        ${window._licenseUnlocked ? `
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-xs text-white font-bold">الوضع الحالي: ${viewOnlyMode ? 'عرض ذكي' : 'طلبات Pro'}</span>
+            <button onclick="window.toggleLicenseMode()" class="bg-yellow-400 text-zinc-950 font-black px-3 py-1 rounded-lg text-xs">تبديل الباقة الآن</button>
+          </div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('modalContainer').innerHTML = `
+  <div class="fixed inset-0 bg-black/85 z-40 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-[#18181b] border border-zinc-700 w-full max-w-[480px] rounded-t-3xl sm:rounded-3xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-zinc-800 flex items-center justify-between flex-shrink-0">
+        <h3 class="font-black text-base text-white">لوحة تحكم المنيو ⚙️</h3>
+        <button onclick="window.closeModal()" class="p-1.5 rounded-xl bg-zinc-800 text-zinc-400"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="flex gap-1.5 p-2.5 bg-zinc-900 border-b border-zinc-800 overflow-x-auto no-scrollbar flex-shrink-0">
+        ${tabs.map(t => `<button onclick="adminTab='${t.id}'; renderAdminModal();" class="px-3 py-1.5 rounded-xl text-[11px] font-black whitespace-nowrap ${adminTab === t.id ? 'bg-yellow-400 text-zinc-950' : 'bg-zinc-800 text-zinc-400'}">${t.label}</button>`).join('')}
+      </div>
+      <div class="p-4 flex-1 min-h-0 overflow-y-auto">${bodyHtml}</div>
+    </div>
+  </div>`;
+  lucide.createIcons();
+}
+
+window.saveSettingsForm = function() {
+  const s = state.settings;
+  s.name = document.getElementById('set_name').value.trim() || s.name;
+  s.desc = document.getElementById('set_desc').value.trim();
+  s.phone = document.getElementById('set_phone').value.trim();
+  s.whatsapp = document.getElementById('set_wa').value.trim();
+  s.address = document.getElementById('set_address').value.trim();
+  s.openTime = document.getElementById('set_open').value;
+  s.closeTime = document.getElementById('set_close').value;
+  s.bannerUrl = document.getElementById('set_banner').value.trim();
+  s.logoUrl = document.getElementById('set_logo').value.trim();
+  s.facebook = document.getElementById('set_fb').value.trim();
+  s.instagram = document.getElementById('set_ig').value.trim();
+  s.mapUrl = document.getElementById('set_map').value.trim();
+  saveState(); renderApp(); showToast('تم حفظ الإعدادات بنجاح ✅');
+};
+
+window.uploadCompressedImg = function(input, field) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxW = 800, scale = Math.min(1, maxW / img.width);
+      canvas.width = img.width * scale; canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      state.settings[field] = canvas.toDataURL('image/jpeg', 0.75);
+      saveState(); renderApp(); showToast('تم ضغط ورفع الصورة بنجاح 🖼️');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.addNewItem = function() {
+  const name = document.getElementById('new_it_name').value.trim();
+  const cat = document.getElementById('new_it_cat').value.trim() || state.categories[0];
+  const desc = document.getElementById('new_it_desc').value.trim();
+  const price = Number(document.getElementById('new_it_price').value) || 0;
+  const img = document.getElementById('new_it_img').value.trim();
+  if (!name || !price) return showToast('يرجى إدخال اسم الصنف والسعر');
+  if (!state.categories.includes(cat)) state.categories.push(cat);
+  state.items.push({ id: Date.now(), cat, name, desc, prices: [{ label: 'عادي', price }], img, badge: 'NEW' });
+  saveState(); renderApp(); renderAdminModal(); showToast('تمت إضافة الصنف ✅');
+};
+
+window.updateItemImg = function(idx, url) {
+  state.items[idx].img = url.trim();
+  saveState(); renderApp(); showToast('تم تحديث رابط الصورة');
+};
+
+window.deleteItem = function(idx) {
+  state.items.splice(idx, 1);
+  saveState(); renderApp(); renderAdminModal();
+};
+
+window.addZone = function() {
+  const name = document.getElementById('z_name').value.trim();
+  const fee = Number(document.getElementById('z_fee').value) || 0;
+  if (!name) return;
+  state.zones.push({ id: Date.now(), name, fee });
+  saveState(); renderAdminModal();
+};
+
+window.addAddon = function() {
+  const name = document.getElementById('a_name').value.trim();
+  const price = Number(document.getElementById('a_price').value) || 0;
+  if (!name) return;
+  state.addons.push({ id: Date.now(), name, price });
+  saveState(); renderAdminModal();
+};
+
+window.addCoupon = function() {
+  const code = document.getElementById('c_code').value.trim().toUpperCase();
+  const value = Number(document.getElementById('c_val').value) || 0;
+  if (!code || !value) return;
+  state.coupons.push({ code, type: 'percent', value });
+  saveState(); renderAdminModal();
+};
+
+window.unlockLicense = function() {
+  if (document.getElementById('licenseKeyInput').value.trim() === LICENSE_SECRET) {
+    window._licenseUnlocked = true;
+    renderAdminModal();
+    showToast('تم فتح إعدادات الترخيص');
+  } else showToast('كود الترخيص غير صحيح');
+};
+
+window.toggleLicenseMode = function() {
+  viewOnlyMode = !viewOnlyMode;
+  localStorage.setItem('mt_license_override', String(viewOnlyMode));
+  cart = [];
+  renderApp(); renderAdminModal();
+  showToast(`تم التبديل إلى: ${viewOnlyMode ? 'باقة العرض الذكي' : 'باقة الطلبات Pro'}`);
+};
+
+window.exportExcel = function() {
+  const wb = XLSX.utils.book_new();
+  const menuRows = state.items.map(it => ({
+    'القسم': it.cat, 'اسم الصنف': it.name, 'الوصف': it.desc,
+    'الأسعار': it.prices.map(p => `${p.label}:${p.price}`).join('|'),
+    'رابط الصورة': it.img, 'الشارة': it.badge || ''
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(menuRows), 'المنيو');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.zones.map(z => ({ 'المنطقة': z.name, 'الرسوم': z.fee }))), 'مناطق التوصيل');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.addons.map(a => ({ 'الإضافة': a.name, 'السعر': a.price }))), 'الإضافات');
+  const s = state.settings;
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([{
+    'اسم المطعم': s.name, 'الوصف': s.desc, 'الهاتف': s.phone, 'واتساب': s.whatsapp,
+    'العنوان': s.address, 'الفتح': s.openTime, 'الإغلاق': s.closeTime, 'الغلاف': s.bannerUrl,
+    'فيسبوك': s.facebook, 'انستجرام': s.instagram, 'الخريطة': s.mapUrl, 'الكوبونات': s.couponsEnabled ? 'نعم' : 'لا'
+  }]), 'الإعدادات');
+  XLSX.writeFile(wb, 'manzouma_menu_master_template.xlsx');
+};
+
+window.importExcel = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+      applyWorkbookData(wb);
+      showToast('تم استيراد ملف Excel بنجاح ✅');
+    } catch { showToast('حدث خطأ في قراءة ملف Excel'); }
+  };
+  reader.readAsArrayBuffer(file);
+};
+
+function applyWorkbookData(wb) {
+  if (wb.Sheets['المنيو']) {
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets['المنيو']);
+    if (rows.length) {
+      state.items = rows.map((r, i) => {
+        const rawPrices = String(r['الأسعار'] || '100').split('|').map(p => {
+          const [lbl, pr] = p.includes(':') ? p.split(':') : ['عادي', p];
+          return { label: lbl.trim(), price: Number(pr) || 0 };
+        });
+        return {
+          id: Date.now() + i, cat: r['القسم'] || 'عام', name: r['اسم الصنف'] || 'صنف',
+          desc: r['الوصف'] || '', prices: rawPrices, img: r['رابط الصورة'] || '', badge: r['الشارة'] || ''
+        };
+      });
+      state.categories = [...new Set(state.items.map(i => i.cat))];
+    }
+  }
+  if (wb.Sheets['مناطق التوصيل']) {
+    const zRows = XLSX.utils.sheet_to_json(wb.Sheets['مناطق التوصيل']);
+    if (zRows.length) state.zones = zRows.map((r, i) => ({ id: i + 1, name: r['المنطقة'], fee: Number(r['الرسوم']) || 0 }));
+  }
+  if (wb.Sheets['الإضافات']) {
+    const aRows = XLSX.utils.sheet_to_json(wb.Sheets['الإضافات']);
+    if (aRows.length) state.addons = aRows.map((r, i) => ({ id: i + 1, name: r['الإضافة'], price: Number(r['السعر']) || 0 }));
+  }
+  if (wb.Sheets['الإعدادات']) {
+    const sRow = XLSX.utils.sheet_to_json(wb.Sheets['الإعدادات'])[0];
+    if (sRow) {
+      Object.assign(state.settings, {
+        name: sRow['اسم المطعم'] || state.settings.name,
+        desc: sRow['الوصف'] || state.settings.desc,
+        phone: String(sRow['الهاتف'] || state.settings.phone),
+        whatsapp: String(sRow['واتساب'] || state.settings.whatsapp),
+        address: sRow['العنوان'] || state.settings.address,
+        bannerUrl: sRow['الغلاف'] || state.settings.bannerUrl,
+        facebook: sRow['فيسبوك'] || '', instagram: sRow['انستجرام'] || '', mapUrl: sRow['الخريطة'] || ''
+      });
+    }
+  }
+  saveState(); renderApp(); renderAdminModal();
+}
+
+window.syncGoogleSheet = async function() {
+  const url = document.getElementById('gsheetUrl').value.trim();
+  const m = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  if (!m) return showToast('رابط Google Sheet غير صالح');
+  const exportUrl = `https://docs.google.com/spreadsheets/d/${m[1]}/export?format=xlsx`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 6000);
+  try {
+    showToast('جاري المزامنة السحابية...');
+    let res;
+    try { res = await fetch(exportUrl, { signal: ctrl.signal }); }
+    catch { res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(exportUrl)}`, { signal: ctrl.signal }); }
+    clearTimeout(timer);
+    const buf = await res.arrayBuffer();
+    applyWorkbookData(XLSX.read(buf, { type: 'array' }));
+    showToast('تمت المزامنة مع Google Sheets بنجاح ☁️');
+  } catch { showToast('تعذر الاتصال بالشيت، تأكد أنه متاح للعامة'); }
+};
+
+window.exportHtml = function() {
+  const docHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([docHtml], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'index.html';
+  a.click();
+};
+
+window.factoryReset = function() {
+  localStorage.removeItem(STORAGE_KEY);
+  state = JSON.parse(JSON.stringify(INITIAL_DATA));
+  saveState(); renderApp(); renderAdminModal();
+  showToast('تمت استعادة البيانات الأصلية');
+};
+
+window.onload = renderApp;
+</script>
+</body>
+</html>
